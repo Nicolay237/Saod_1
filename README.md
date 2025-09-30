@@ -13,6 +13,8 @@
 - ✅ Сортировка слиянием (Merge Sort)
 - ✅ Пирамидальная сортировка (Heap Sort)
 - ✅ Быстрая сортировка (Quick Sort)
+  
+<img width="1536" height="767" alt="Figure_1" src="https://github.com/user-attachments/assets/558faa37-0504-4a64-aa26-780802ad0eb8" />
 
 ### Строковая сортировка:
 - ✅ Лексикографическая сортировка (на основе Quick Sort)
