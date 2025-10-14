@@ -193,7 +193,6 @@ void quickSortStrings(char* arr[], int low, int high) {
     }
 }
 
-// Лексикографическая пузырьковая сортировка
 void bubbleSortStrings(char* arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         bool swapped = false;
@@ -207,13 +206,11 @@ void bubbleSortStrings(char* arr[], int n) {
     }
 }
 
-// Лексикографическая сортировка вставками
 void insertionSortStrings(char* arr[], int n) {
     for (int i = 1; i < n; i++) {
         char* key = arr[i];
         int j = i - 1;
 
-        // Сдвигаем элементы, которые больше key, на одну позицию вперед
         while (j >= 0 && stringCompare(arr[j], key) > 0) {
             arr[j + 1] = arr[j];
             j--;
@@ -339,7 +336,6 @@ void testAdvancedSortWithSave(void (*sortFunc)(int[], int, int), const char* nam
 
 void testStringSortWithSave(void (*sortFunc)(char* [], int), const char* name, const char* filename,
     char* arr[], int n, char* original[]) {
-    // Восстанавливаем исходные данные
     for (int i = 0; i < n; i++) {
         stringCopy(arr[i], original[i]);
     }
@@ -388,7 +384,6 @@ int main() {
             stringCopy(originalStrings[i], strings[i]);
         }
 
-        // Тестируем быструю сортировку для строк
         double time = measureTime([&]() { quickSortStrings(strings, 0, stringCount - 1); });
         std::cout << "Быстрая лексикографическая сортировка: " << time << " секунд" << std::endl;
         saveStringsToFile("lexicographic_quick_sorted.txt", strings, stringCount);
@@ -412,7 +407,6 @@ int main() {
     std::cout << "\nЛексикографическая сортировка (файл few_people.txt на 10000 строк):" << std::endl;
     std::cout << "==============================================" << std::endl;
 
-    // Загрузка данных из few_people.txt для тестирования медленных сортировок
     char** fewStrings = nullptr;
     int fewStringCount = readStringsFromFile("few_people.txt", &fewStrings);
 
@@ -425,11 +419,9 @@ int main() {
 
         std::cout << "Обработка " << fewStringCount << " строк из few_people.txt..." << std::endl;
 
-        // Тестируем пузырьковую сортировку для строк на файле few_people.txt
         testStringSortWithSave(bubbleSortStrings, "Пузырьковая лексикографическая сортировка",
             "lexicographic_bubble_sorted.txt", fewStrings, fewStringCount, originalFewStrings);
 
-        // Тестируем сортировку вставками для строк на файле few_people.txt
         testStringSortWithSave(insertionSortStrings, "Лексикографическая сортировка вставками",
             "lexicographic_insertion_sorted.txt", fewStrings, fewStringCount, originalFewStrings);
 
