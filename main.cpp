@@ -1,8 +1,8 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <chrono>
 
-// Вспомогательные функции для работы с массивами
+
 void swap(int* a, int* b) {
     int temp = *a;
     *a = *b;
@@ -15,7 +15,6 @@ void swapStrings(char** a, char** b) {
     *b = temp;
 }
 
-// 1. Сортировка выбором (Selection Sort)
 void selectionSort(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         int minIndex = i;
@@ -30,7 +29,6 @@ void selectionSort(int arr[], int n) {
     }
 }
 
-// 2. Пузырьковая сортировка (Bubble Sort)
 void bubbleSort(int arr[], int n) {
     for (int i = 0; i < n - 1; i++) {
         bool swapped = false;
@@ -44,7 +42,6 @@ void bubbleSort(int arr[], int n) {
     }
 }
 
-// 3. Сортировка вставками (Insertion Sort)
 void insertionSort(int arr[], int n) {
     for (int i = 1; i < n; i++) {
         int key = arr[i];
@@ -57,22 +54,18 @@ void insertionSort(int arr[], int n) {
     }
 }
 
-// 4. Сортировка слиянием (Merge Sort)
 void merge(int arr[], int left, int mid, int right) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
 
-    // Создаем временные массивы
     int* leftArr = new int[n1];
     int* rightArr = new int[n2];
 
-    // Копируем данные во временные массивы
     for (int i = 0; i < n1; i++)
         leftArr[i] = arr[left + i];
     for (int j = 0; j < n2; j++)
         rightArr[j] = arr[mid + 1 + j];
 
-    // Слияние временных массивов обратно в arr[left..right]
     int i = 0, j = 0, k = left;
     while (i < n1 && j < n2) {
         if (leftArr[i] <= rightArr[j]) {
@@ -86,14 +79,12 @@ void merge(int arr[], int left, int mid, int right) {
         k++;
     }
 
-    // Копируем оставшиеся элементы leftArr[]
     while (i < n1) {
         arr[k] = leftArr[i];
         i++;
         k++;
     }
 
-    // Копируем оставшиеся элементы rightArr[]
     while (j < n2) {
         arr[k] = rightArr[j];
         j++;
@@ -113,7 +104,6 @@ void mergeSort(int arr[], int left, int right) {
     }
 }
 
-// 5. Пирамидальная сортировка (Heap Sort)
 void heapify(int arr[], int n, int i) {
     int largest = i;
     int left = 2 * i + 1;
@@ -132,18 +122,15 @@ void heapify(int arr[], int n, int i) {
 }
 
 void heapSort(int arr[], int n) {
-    // Построение max-heap
     for (int i = n / 2 - 1; i >= 0; i--)
         heapify(arr, n, i);
 
-    // Извлечение элементов из кучи один за другим
     for (int i = n - 1; i > 0; i--) {
         swap(&arr[0], &arr[i]);
         heapify(arr, i, 0);
     }
 }
 
-// 6. Быстрая сортировка (Quick Sort)
 int partition(int arr[], int low, int high) {
     int pivot = arr[high];
     int i = (low - 1);
@@ -166,7 +153,6 @@ void quickSort(int arr[], int low, int high) {
     }
 }
 
-// Функции для лексикографической сортировки строк
 int stringCompare(const char* str1, const char* str2) {
     while (*str1 && (*str1 == *str2)) {
         str1++;
@@ -185,7 +171,6 @@ int stringLength(const char* str) {
     return length;
 }
 
-// Лексикографическая сортировка строк (Quick Sort для строк)
 int partitionStrings(char* arr[], int low, int high) {
     char* pivot = arr[high];
     int i = (low - 1);
@@ -208,7 +193,35 @@ void quickSortStrings(char* arr[], int low, int high) {
     }
 }
 
-// Функции для работы с файлами
+// Лексикографическая пузырьковая сортировка
+void bubbleSortStrings(char* arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        bool swapped = false;
+        for (int j = 0; j < n - i - 1; j++) {
+            if (stringCompare(arr[j], arr[j + 1]) > 0) {
+                swapStrings(&arr[j], &arr[j + 1]);
+                swapped = true;
+            }
+        }
+        if (!swapped) break;
+    }
+}
+
+// Лексикографическая сортировка вставками
+void insertionSortStrings(char* arr[], int n) {
+    for (int i = 1; i < n; i++) {
+        char* key = arr[i];
+        int j = i - 1;
+
+        // Сдвигаем элементы, которые больше key, на одну позицию вперед
+        while (j >= 0 && stringCompare(arr[j], key) > 0) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+    }
+}
+
 int readNumbersFromFile(const char* filename, int** arr) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -216,7 +229,6 @@ int readNumbersFromFile(const char* filename, int** arr) {
         return 0;
     }
 
-    // Сначала подсчитаем количество чисел
     int count = 0;
     int temp;
     while (file >> temp) {
@@ -226,7 +238,6 @@ int readNumbersFromFile(const char* filename, int** arr) {
     file.clear();
     file.seekg(0);
 
-    // Выделяем память и читаем числа
     *arr = new int[count];
     for (int i = 0; i < count; i++) {
         file >> (*arr)[i];
@@ -243,7 +254,6 @@ int readStringsFromFile(const char* filename, char*** arr) {
         return 0;
     }
 
-    // Подсчет количества строк
     int count = 0;
     char buffer[256];
     while (file.getline(buffer, 256)) {
@@ -253,7 +263,6 @@ int readStringsFromFile(const char* filename, char*** arr) {
     file.clear();
     file.seekg(0);
 
-    // Выделяем память и читаем строки
     *arr = new char* [count];
     for (int i = 0; i < count; i++) {
         file.getline(buffer, 256);
@@ -265,7 +274,6 @@ int readStringsFromFile(const char* filename, char*** arr) {
     return count;
 }
 
-// Функции для сохранения результатов в файлы
 void saveNumbersToFile(const char* filename, int arr[], int n) {
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -296,7 +304,6 @@ void saveStringsToFile(const char* filename, char* arr[], int n) {
     std::cout << "Результат сохранен в " << filename << std::endl;
 }
 
-// Функция для измерения времени выполнения
 template<typename Func>
 double measureTime(Func func) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -306,10 +313,8 @@ double measureTime(Func func) {
     return duration.count();
 }
 
-// Функции для тестирования сортировок с сохранением результатов
 void testSortWithSave(void (*sortFunc)(int[], int), const char* name, const char* filename,
     int arr[], int n, int original[]) {
-    // Восстанавливаем исходный массив
     for (int i = 0; i < n; i++) {
         arr[i] = original[i];
     }
@@ -317,7 +322,6 @@ void testSortWithSave(void (*sortFunc)(int[], int), const char* name, const char
     double time = measureTime([&]() { sortFunc(arr, n); });
     std::cout << name << ": " << time << " секунд" << std::endl;
 
-    // Сохраняем результат
     saveNumbersToFile(filename, arr, n);
 }
 
@@ -330,12 +334,23 @@ void testAdvancedSortWithSave(void (*sortFunc)(int[], int, int), const char* nam
     double time = measureTime([&]() { sortFunc(arr, 0, n - 1); });
     std::cout << name << ": " << time << " секунд" << std::endl;
 
-    // Сохраняем результат
     saveNumbersToFile(filename, arr, n);
 }
 
+void testStringSortWithSave(void (*sortFunc)(char* [], int), const char* name, const char* filename,
+    char* arr[], int n, char* original[]) {
+    // Восстанавливаем исходные данные
+    for (int i = 0; i < n; i++) {
+        stringCopy(arr[i], original[i]);
+    }
+
+    double time = measureTime([&]() { sortFunc(arr, n); });
+    std::cout << name << ": " << time << " секунд" << std::endl;
+
+    saveStringsToFile(filename, arr, n);
+}
+
 int main() {
-    // Чтение числовых данных
     setlocale(LC_ALL, "Russian");
     int* numbers = nullptr;
     int n = readNumbersFromFile("numbers.txt", &numbers);
@@ -345,7 +360,6 @@ int main() {
         return 1;
     }
 
-    // Создаем копию исходных данных
     int* original = new int[n];
     for (int i = 0; i < n; i++) {
         original[i] = numbers[i];
@@ -354,7 +368,6 @@ int main() {
     std::cout << "Анализ времени выполнения сортировок для " << n << " элементов:" << std::endl;
     std::cout << "==============================================" << std::endl;
 
-    // Тестируем все сортировки с сохранением результатов
     testSortWithSave(selectionSort, "Сортировка выбором", "selection_sorted.txt", numbers, n, original);
     testSortWithSave(bubbleSort, "Пузырьковая сортировка", "bubble_sorted.txt", numbers, n, original);
     testSortWithSave(insertionSort, "Сортировка вставками", "insertion_sorted.txt", numbers, n, original);
@@ -362,33 +375,29 @@ int main() {
     testSortWithSave(heapSort, "Пирамидальная сортировка", "heap_sorted.txt", numbers, n, original);
     testAdvancedSortWithSave(quickSort, "Быстрая сортировка", "quick_sorted.txt", numbers, n, original);
 
-    // Лексикографическая сортировка
-    std::cout << "\nЛексикографическая сортировка:" << std::endl;
+    std::cout << "\nЛексикографическая сортировка (файл people.txt):" << std::endl;
     std::cout << "==============================================" << std::endl;
 
     char** strings = nullptr;
     int stringCount = readStringsFromFile("people.txt", &strings);
 
     if (stringCount > 0) {
-        // Создаем копию исходных строк для восстановления
         char** originalStrings = new char* [stringCount];
         for (int i = 0; i < stringCount; i++) {
             originalStrings[i] = new char[256];
             stringCopy(originalStrings[i], strings[i]);
         }
 
+        // Тестируем быструю сортировку для строк
         double time = measureTime([&]() { quickSortStrings(strings, 0, stringCount - 1); });
-        std::cout << "Время выполнения: " << time << " секунд" << std::endl;
+        std::cout << "Быстрая лексикографическая сортировка: " << time << " секунд" << std::endl;
+        saveStringsToFile("lexicographic_quick_sorted.txt", strings, stringCount);
 
-        // Сохраняем отсортированные строки
-        saveStringsToFile("lexicographic_sorted.txt", strings, stringCount);
-
-        std::cout << "\nПервые 10 отсортированных строк:" << std::endl;
+        std::cout << "\nПервые 10 отсортированных строк (из быстрой сортировки):" << std::endl;
         for (int i = 0; i < (stringCount < 10 ? stringCount : 10); i++) {
             std::cout << strings[i] << std::endl;
         }
 
-        // Освобождаем память строк
         for (int i = 0; i < stringCount; i++) {
             delete[] strings[i];
             delete[] originalStrings[i];
@@ -400,10 +409,48 @@ int main() {
         std::cout << "Файл people.txt пуст или не найден" << std::endl;
     }
 
-    // Сохраняем исходные данные для сравнения
+    std::cout << "\nЛексикографическая сортировка (файл few_people.txt на 10000 строк):" << std::endl;
+    std::cout << "==============================================" << std::endl;
+
+    // Загрузка данных из few_people.txt для тестирования медленных сортировок
+    char** fewStrings = nullptr;
+    int fewStringCount = readStringsFromFile("few_people.txt", &fewStrings);
+
+    if (fewStringCount > 0) {
+        char** originalFewStrings = new char* [fewStringCount];
+        for (int i = 0; i < fewStringCount; i++) {
+            originalFewStrings[i] = new char[256];
+            stringCopy(originalFewStrings[i], fewStrings[i]);
+        }
+
+        std::cout << "Обработка " << fewStringCount << " строк из few_people.txt..." << std::endl;
+
+        // Тестируем пузырьковую сортировку для строк на файле few_people.txt
+        testStringSortWithSave(bubbleSortStrings, "Пузырьковая лексикографическая сортировка",
+            "lexicographic_bubble_sorted.txt", fewStrings, fewStringCount, originalFewStrings);
+
+        // Тестируем сортировку вставками для строк на файле few_people.txt
+        testStringSortWithSave(insertionSortStrings, "Лексикографическая сортировка вставками",
+            "lexicographic_insertion_sorted.txt", fewStrings, fewStringCount, originalFewStrings);
+
+        std::cout << "\nПервые 10 отсортированных строк (из сортировки вставками):" << std::endl;
+        for (int i = 0; i < (fewStringCount < 10 ? fewStringCount : 10); i++) {
+            std::cout << fewStrings[i] << std::endl;
+        }
+
+        for (int i = 0; i < fewStringCount; i++) {
+            delete[] fewStrings[i];
+            delete[] originalFewStrings[i];
+        }
+        delete[] fewStrings;
+        delete[] originalFewStrings;
+    }
+    else {
+        std::cout << "Файл few_people.txt пуст или не найден" << std::endl;
+    }
+
     saveNumbersToFile("original_numbers.txt", original, n);
 
-    // Освобождаем память
     delete[] numbers;
     delete[] original;
 
@@ -414,7 +461,9 @@ int main() {
     std::cout << "- merge_sorted.txt" << std::endl;
     std::cout << "- heap_sorted.txt" << std::endl;
     std::cout << "- quick_sorted.txt" << std::endl;
-    std::cout << "- lexicographic_sorted.txt (для строк)" << std::endl;
+    std::cout << "- lexicographic_quick_sorted.txt (быстрая для строк из people.txt)" << std::endl;
+    std::cout << "- lexicographic_bubble_sorted.txt (пузырьковая для строк из few_people.txt)" << std::endl;
+    std::cout << "- lexicographic_insertion_sorted.txt (вставками для строк из few_people.txt)" << std::endl;
     std::cout << "- original_numbers.txt (исходные данные)" << std::endl;
 
     return 0;
